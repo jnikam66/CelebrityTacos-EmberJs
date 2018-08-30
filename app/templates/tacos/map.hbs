@@ -1,0 +1,71 @@
+
+{{new-taco-watcher}}
+
+<div data-page-role="map">
+
+  <div class="container">
+    <div class="jumbotron">
+
+      <h1>
+        <img data-image-role="jumbotron-image" src="/assets/images/taco-large.png" />
+        Taco Map!
+      </h1>
+      <p>
+        Here you'll find a map of all the taco sightings currently in our database
+      </p>
+    </div>
+  </div>
+
+  <div data-element-role="map-and-list">
+    <div data-element-role="map" class="container">
+      {{#leaflet-map lat=calculatedMapCoordinates.average.latitude lng=calculatedMapCoordinates.average.longitude zoom=3}}
+
+        {{#each sightings_sorted as |sighting|}}
+          {{#if sighting.location_longitude}}
+            {{#if sighting.location_geo_array}}
+
+              {{tile-layer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png"}}
+
+              {{#marker-layer location=sighting.location_geo_array icon=mapIcons.taco}}
+
+                {{#popup-layer}}
+                  <h3>{{celebrity-names celebrities=sighting.celebrities}}</h3>
+                  <p>
+                    {{celebrity-names celebrities=sighting.celebrities}}
+                    spotted eating a {{taco-types tacoTypes=sighting.tacoTypes}}
+                    taco at
+                    {{sighting.location}}
+                  </p>
+                  <p>
+                    {{#link-to "tacos.view" sighting.id}}Click for more info{{/link-to}}
+                  </p>
+                {{/popup-layer}}
+
+              {{/marker-layer}}
+            {{/if}}
+          {{/if}}
+        {{/each}}
+      {{/leaflet-map}}
+    </div>
+
+    <div data-element-role="included-sightings" class="container">
+      <h2>Included Sightings</h2>
+      <ul>
+        {{#each sightings_sorted as |sighting|}}
+          <li>
+            {{#link-to "tacos.view" sighting.id}}
+              {{sighting.title}}
+              ::
+              {{celebrity-names celebrities=sighting.celebrities}}
+              ::
+              {{taco-types tacoTypes=sighting.tacoTypes}}
+            {{/link-to}}
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+{{outlet}}

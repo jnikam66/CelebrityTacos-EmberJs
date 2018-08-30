@@ -1,0 +1,180 @@
+
+<div class="container">
+  <div data-element-role="main-page-jumbotron" class="jumbotron">
+    <h1>
+      <img data-image-role="jumbotron-image" src="/assets/images/taco-large.png" />
+      Add a Taco Sighting !!!
+    </h1>
+    <p>
+      Have you spotted a celebrity taco?
+      Submit your taco sighting here, and receive
+      <span class="text-primary">instant fame and glory!!</span>
+    </p>
+  </div>
+</div>
+
+<div class="container panel panel-default">
+
+  <div class="panel-body">
+
+    <div data-element-role="sighting-submit-success-container">
+      {{#if responseMessage}}
+        <div data-element-role="sighting-submit-success" class="alert alert-success">
+          {{responseMessage}}
+        </div>
+      {{/if}}
+    </div>
+
+    <form data-form-role="create-new-sighting">
+      <div class="form-group has-feedback {{if isTacoTitleValid "has-success"}}">
+        <label for="taco-title" class="control-label">
+          Title
+        </label>
+        {{input
+          id="taco-title"
+          type="text" class="form-control"
+          class="form-control"
+          aria-describedby="taco-title-description"
+          value=tacoTitle
+          placeholder="Please type a title of your taco sighting here"
+          autofocus=true
+        }}
+        <span id="taco-title-description">(title of your sighting)</span>
+        <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+      </div>
+
+      <div class="form-group has-feedback {{if isTacoDescriptionValid "has-success"}}">
+        <label for="taco-description" class="control-label">
+          Description
+        </label>
+        {{textarea
+          id="taco-description"
+          type="text" class="form-control"
+          class="form-control"
+          aria-describedby="taco-description-description"
+          value=tacoDescription
+          placeholder="Please enter details about your taco sighting here"
+        }}
+        <span id="taco-description-description">(details and description)</span>
+        <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+      </div>
+
+      <div class="form-group has-feedback {{if isTacoLocationValid "has-success"}}">
+        <label for="taco-location" class="control-label">
+          Location
+        </label>
+        {{input
+          id="taco-location"
+          type="text" class="form-control"
+          class="form-control"
+          aria-describedby="taco-location-description"
+          value=tacoLocation
+          placeholder="800 N State College Blvd, Fullerton, CA 92831, US"
+        }}
+        <span id="taco-location-description">(Enter a location in the form: Address, City, State Zip, Country)</span>
+        <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+      </div>
+
+      <div class="form-group has-feedback {{if isTacoLocationGeoCoordinatesValid "has-success"}}">
+        <label for="taco-location-geo" class="control-label">
+          Location Geo Coordinates
+        </label>
+        {{input
+          id="taco-location-geo"
+          type="text" class="form-control"
+          class="form-control"
+          aria-describedby="taco-location-geo-description"
+          value=tacoLocationGeoCoordinates
+          placeholder="Enter geo coordinates in the form: 33.8829226, -117.8869261"
+        }}
+        {{#if tacoLocationGeoCoordinatesMessage}}
+          <div class="alert {{tacoLocationGeoCoordinatesMessageClass}}">
+            {{tacoLocationGeoCoordinatesMessage}}
+          </div>
+        {{/if}}
+        <div>
+          <button class="btn btn-info" disabled={{isTacoLocationGeoCoordinatesAutoButtonDisabled}} {{action "autoLocationGeo"}}>Auto</button>
+        </div>
+        <span id="taco-location-description">(enter the latitude and longitude of your sighting here in the form <strong>"[lat], [long]"</strong> or try clicking the "Auto" button)</span>
+        <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+      </div>
+
+      <div class="form-group has-feedback {{if isTacoCelebrityValid "has-success"}}">
+        <label for="celebrity" class="control-label">
+          Celebrity Seen Eating the Taco
+        </label>
+        <select
+          id="celebrity" class="form-control has-feedback" data-style="btn-primary"
+          aria-describedby="taco-celebrity-description"
+          onchange={{action "tacoCelebrityChanged" value="target.value"}}
+        >
+          <option value="">
+            Please select a celebrity
+          </option>
+          {{#each celebrities as |celebrity|}}
+            <option value="{{celebrity.id}}">
+              {{celebrity.name}}
+            </option>
+          {{/each}}
+        </select>
+        <span id="taco-celebrity-description">(celebrity spotted eating the taco)</span>
+        <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+      </div>
+
+      <div class="form-group has-feedback {{if isTacoTypeValid "has-success"}}">
+        <label for="tacoType" class="control-label">
+          Taco Type
+        </label>
+        <select
+          id="tacoType"
+          class="form-control"
+          data-style="btn-primary"
+          aria-describedby="taco-type-description"
+          onchange={{action "tacoTypeChanged" value="target.value"}}
+        >
+          <option value="">
+            Please select a taco type
+          </option>
+          {{#each tacoTypes as |tacoType|}}
+            <option value="{{tacoType.id}}">
+              {{tacoType.name}}
+            </option>
+          {{/each}}
+        </select>
+        <span id="taco-type-description">(type of taco spotted)</span>
+        <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+      </div>
+
+      <div class="form-group has-feedback {{if isTacoImageFileDataUrlValid "has-success"}}">
+        <label for="taco-image-file" class="control-label">
+          Taco Sighting Image
+        </label>
+        <div>
+          {{x-file-input
+            multiple=false
+            id="taco-image-file"
+            name="taco-image-file"
+            class="btn btn-info"
+            action=(action "didSelectImage")
+            accept="image/*"
+            alt="Click Here to Select An Image"
+            aria-describedby="taco-image-file-description"
+          }}
+          <img src="" id="taco-image-file-preview" class="sighting-image-upload-preview" />
+        </div>
+        <span id="taco-image-file-description">(your taco sighting image)</span>
+        <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+      </div>
+
+      <div class="text-center">
+        <button class="btn btn-primary" disabled={{isSubmitButtonDisabled}} {{action "submitNewSighting"}}>
+          Submit Your Celebrity Taco Sighting
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+{{outlet}}

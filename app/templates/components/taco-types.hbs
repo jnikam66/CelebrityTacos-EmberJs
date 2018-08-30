@@ -1,0 +1,4 @@
+{{#each tacoTypes as |t|}}
+  {{t.name}}{{#if (equals t.id lastTacoTypeId)}}{{else}}, {{/if}}
+{{/each}}
+{{yield}}

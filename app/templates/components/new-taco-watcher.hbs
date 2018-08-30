@@ -1,0 +1,24 @@
+{{#if foundChange}}
+  <a data-element-role="taco-alert-waiting" href="#" {{action "showTacoAlert"}}><img  class="woah infinite pulse" src="/assets/images/taco-alert-waiting.png"></a>
+{{/if}}
+
+<img data-image-role="taco-alert" src="/assets/images/taco-alert-animated.png">
+
+<!-- We need to have lastSightingID rendered in the page, so the computed/observers will actually watch it -->
+<div data-last-sighting-id="{{lastSightingID}}"></div>
+<!-- We need to have lastSightingID rendered in the page, so the computed/observers will actually watch it -->
+
+<!-- Special hidden link we can click once the taco alert animation is finished -->
+{{#link-to "tacos.view" lastSightingID}}<a data-anchor-role="taco-alert-sighting-link"></a>{{/link-to}}
+<!-- Special hidden link we can click once the taco alert animation is finished -->
+
+
+<!-- Hidden audio control to play our alert sound, YAY -->
+<audio data-audio-role="taco-alert-audio">
+    <source src="/assets/audio/taco-alert.mp3" type="audio/mpeg">
+</audio>
+<!-- Hidden audio control to play our alert sound, YAY -->
+
+<!--<div style="width:100px;height:100px;background-color:red;" class="woah pulse infinite"></div>-->
+
+{{yield}}

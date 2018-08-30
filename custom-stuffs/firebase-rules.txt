@@ -1,0 +1,14 @@
+
+{
+  "rules": {
+    ".read": true,
+    ".write": true,
+      "celebrities" : {
+       ".indexOn" : "name" 
+      },
+      "tacoTypes" : {
+        ".indexOn" : "name"
+      }
+  }
+}
+

@@ -1,0 +1,4 @@
+{{#each celebrities as |celeb|}}
+  <span data-element-role="celebrity-name">{{celeb.name}}</span>{{#if (equals celeb.id lastCelebrityId)}}{{else}}, {{/if}}
+{{/each}}
+{{yield}}

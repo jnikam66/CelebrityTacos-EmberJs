@@ -1,0 +1,41 @@
+
+
+<div data-element-role="taco-sightings-list" class="panel-group">
+
+  {{#if sightings}}
+    {{#each sightings as |sighting|}}
+
+      <div class="panel panel-primary" data-element-role="taco-sighting-panel">
+        <div class="panel-heading" data-taco-sighting-panel-role="header">
+          <span data-element-role="celebrities-names">
+            <h3>
+              {{celebrity-names celebrities = sighting.celebrities}}
+              <span data-element-role="sighting-title">{{sighting.title}}</span>
+            </h3>
+          </span>
+        </div>
+        <div
+          class="panel-body"
+          data-taco-sighting-panel-role="body"
+        >{{#link-to "tacos.view" sighting.id}}<img
+          data-image-role="sighting-image"
+          src="{{sighting.imageDataUrl}}"
+          >{{/link-to}}<div>Taco Types: <span
+                  data-element-role="taco-types-names"
+                >{{taco-types tacoTypes=sighting.tacoTypes}}</span> @ {{sighting.location}}</div>
+          <blockquote class="text-info">{{truncate sighting.description 200}}</blockquote><div>{{#link-to "tacos.view" sighting.id class="btn btn-primary"}}View This Taco Sighting{{/link-to}}</div></div><div class="panel-footer" data-taco-sighting-panel-role="footer">
+          Sighting occurred on {{moment-format sighting.date "MMMM Do YYYY, h:mm:ss a"}}
+          ({{moment-from-now sighting.date}})
+        </div>
+      </div>
+
+    {{/each}}
+  {{else}}
+    <div class="alert alert-danger">
+      No taco sightings found!
+    </div>
+  {{/if}}
+
+</div>
+
+{{yield}}

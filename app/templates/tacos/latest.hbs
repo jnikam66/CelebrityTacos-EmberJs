@@ -1,0 +1,20 @@
+{{new-taco-watcher}}
+
+<div class="container">
+  <div class="jumbotron">
+    <h1>
+      <img data-image-role="jumbotron-image" src="/assets/images/taco-large.png" />
+      Latest Tacos
+    </h1>
+    <p>
+      Here you'll find a list of all the latest celebrity taco sightings.
+      Happy Taco'ing !
+    </p>
+  </div>
+</div>
+
+<div class="container">
+  {{taco-sighting-list sightings=sightings_sorted}}
+</div>
+
+{{outlet}}

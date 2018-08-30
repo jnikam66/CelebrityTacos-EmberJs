@@ -1,0 +1,178 @@
+
+//
+@import "bootstrap";
+
+//
+body {
+  padding: 2em;
+  cursor: url("/assets/cursors/taco-cursor.cur"),auto !important;
+}
+body a:hover {
+  cursor: url("/assets/cursors/taco-cursor-hand.cur"),auto !important;
+}
+body button:hover {
+  cursor: url("/assets/cursors/taco-cursor-hand.cur"),auto !important;
+}
+
+//
+nav.navbar {
+}
+
+//
+nav.navbar ul.navbar-right {
+  margin-right: 2em;
+}
+
+//
+nav.navbar [data-image-role="navbar-logo"] {
+  max-height: 2em;
+  margin-top: 1em;
+  margin-right: 1em;
+}
+
+//
+[data-element-role="main-content"] {
+  padding: 2em;
+}
+
+[data-element-role="taco-sightings-list"] .panel-heading {
+  background-image: url("/assets/images/taco-small.png");
+  background-position: right;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+[data-page-role="view-sighting"] [data-element-role="full-details"] {
+  //  Uhhhhh
+}
+
+[data-page-role="view-sighting"] [data-element-role="image-only"] {
+  display: none;
+}
+
+//
+[data-page-role="view-sighting"] [data-view-sighting-role="body"] {
+  white-space: pre-line;
+  display:inline !important;
+}
+[data-page-role="view-sighting"] [data-element-role="full-details"] [data-element-role="sighting-image-map-container"] {
+  display: flex;
+  justify-content: space-around;
+}
+[data-page-role="view-sighting"] [data-element-role="full-details"] [data-element-role="sighting-image-container"] {
+  display: inline;
+}
+[data-page-role="view-sighting"] [data-element-role="full-details"] [data-element-role="sighting-map-container"] {
+  display: inline;
+}
+[data-page-role="view-sighting"] [data-element-role="full-details"] img[data-image-role="sighting-image"] {
+  max-width: 50vw;
+  max-height: 50vh;
+  margin: 1em;
+}
+
+[data-page-role="view-sighting"] [data-element-role="image-only"] {
+  //
+}
+[data-page-role="view-sighting"] [data-element-role="image-only"] img[data-image-role="sighting-image"] {
+  max-width: 75vw;
+  max-height: 75vh;
+  margin: auto;
+}
+
+[data-element-role="sighting-comments"] [data-element-role="sighting-comment"] [data-element-role="author-photo"] {
+  display: inline;
+  float: left;
+}
+[data-element-role="sighting-comments"] [data-element-role="sighting-comment"] [data-element-role="author-photo"] img {
+  max-width: 5em;
+  max-height: 5em;
+  margin: 1em;
+}
+
+[data-element-role="sighting-comments"] [data-element-role="sighting-comment"] [data-element-role="comment-body"] {
+  margin: 1em;
+  white-space: pre-line;
+}
+
+[data-element-role="sighting-comments"] [data-element-role="sighting-comment"] [data-element-role="delete-my-comment-container"] {
+  display: none;
+}
+[data-element-role="sighting-comments"] [data-element-role="sighting-comment"]:hover [data-element-role="delete-my-comment-container"] {
+  display: block;
+}
+
+//
+[data-element-role="taco-sighting-panel"] [data-taco-sighting-panel-role="body"] {
+  white-space: pre-line;
+}
+[data-element-role="taco-sighting-panel"] [data-element-role="celebrities-names"] h3 {
+  margin: 0;
+}
+[data-element-role="taco-sighting-panel"] [data-element-role="celebrities-names"] [data-element-role="celebrity-name"]:after {
+  //
+}
+[data-element-role="taco-sighting-panel"] [data-element-role="celebrities-names"] [data-element-role="celebrity-name"]:last-child:after {
+  //
+}
+[data-element-role="taco-sighting-panel"] [data-element-role="sighting-title"]:before {
+  content: " - ";
+}
+
+[data-element-role="taco-sighting-panel"] img[data-image-role="sighting-image"] {
+  float:left;
+  max-width:100px;
+  max-height: 100px;
+  margin: 1em;
+}
+
+[data-page-role="map"] [data-element-role="map-and-list"] {
+  display: flex;
+  justify-content: space-evenly;
+}
+[data-page-role="map"] [data-element-role="map-and-list"] [data-element-role="map"]{
+  //
+}
+[data-page-role="map"] [data-element-role="map-and-list"] [data-element-role="included-sightings"] {
+  margin: auto;
+}
+[data-page-role="map"] [data-element-role="map-and-list"] [data-element-role="included-sightings"] ul {
+  //
+}
+
+[data-element-role="taco-alert-waiting"] {
+  position: absolute;
+  top: 2em;
+  left: 0em;
+
+  z-index: 50000;
+}
+[data-image-role="taco-alert"] {
+  display: none;
+  position:absolute;
+  max-height: 90vh;
+  max-width: 80vw;
+  z-index: 50000;
+}
+
+[data-anchor-role="taco-alert-sighting-link"] {
+
+}
+
+div.jumbotron h1 [data-image-role="jumbotron-image"] {
+  max-width: 3em;
+  max-height: 3em;
+  align: middle;
+  margin: 0;
+}
+
+img.sighting-image-upload-preview {
+  max-width: 100px;
+  max-height: 100px;
+}
+
+.leaflet-container{
+  height: 350px;
+  width: 350px;
+  margin: auto;
+}

@@ -1,0 +1,460 @@
+#!/usr/bin/env python2
+
+#	Original reference: https://blog.devcolor.org/heating-up-with-firebase-tutorial-on-how-to-integrate-firebase-into-your-app-6ce97440175d
+#	Better reference: https://github.com/thisbejim/Pyrebase
+
+
+#	Tutorial on uploading images to firebase with ember.js:
+#	https://medium.com/@lawrey/emberjs-firebase-journey-4-how-to-upload-image-to-firebase-ee49cc1d2b7b
+
+#	Accessing controllers (and their models) from other controllers
+#	https://stackoverflow.com/questions/14838377/how-do-you-get-a-controllers-model-from-another-controller-in-ember-js
+
+#
+import base64
+import datetime
+import loremipsum
+import pyrebase
+import random
+import time
+
+
+#	Hi bro
+def main():
+	
+	#	Config to talk to the database
+	config = {
+		"apiKey"				: "AIzaSyAurUVkYJCxTS07wz-5xhwK788BDRWTN1Q",
+		"authDomain"			: "celebrity-tacos-93287236.firebaseapp.com",
+		"databaseURL"			: "https://celebrity-tacos-93287236.firebaseio.com",
+		"projectId"				: "celebrity-tacos-93287236",
+		"storageBucket"			: "celebrity-tacos-93287236.appspot.com",
+		"messagingSenderId"		: "369667154298"
+	};
+	
+	#
+	#stamp = time.time()
+	#print "Current timestamp: " + str(stamp)
+	#print "In datetime: " + str(datetime.datetime.fromtimestamp(stamp))
+	
+	#
+	initter = Initializer(config)
+	initter.run()
+
+#
+class Initializer():
+	
+	#
+	_config = None
+	_firebase = None
+	_db = None
+	
+	####
+	_types = [
+		"Crunchy",
+		"Soft",
+		"Huge",
+		"Messy",
+		"Gross"
+	]
+	
+	#
+	def __init__(self, config):
+		
+		#
+		self._config = config
+		self._firebase = pyrebase.initialize_app(config)
+		self._db = self._firebase.database()
+	
+	#
+	def __del__(self):
+		pass
+	
+	#
+	def run(self):
+		
+		#
+		self.delete_tables()
+		self.init_special_celebs()
+		self.init_sightings()
+	
+	#
+	def print_tables(self):
+		
+		#
+		self.print_table("celebrities")
+		self.print_table("tacoTypes")
+		self.print_table("sightings")
+		
+	
+	#
+	def print_table(self, table, title=None):
+		
+		#
+		if (title == None):
+			title = "Printing Table: " + table
+		
+		#
+		print title + ": "
+		
+		#
+		items_ref = self._db.child(table).get()
+		if ( items_ref.val() == None):
+			print "[nothing]"
+			return
+		
+		#
+		for key in items_ref.val().keys():
+			print str(items_ref.val()[key])
+	
+	
+	#
+	def delete_tables(self):
+		
+		#
+		self.delete_table("celebrities")
+		self.delete_table("tacoTypes")
+		self.delete_table("sightings")
+		self.delete_table("sightingComments")
+	
+	#
+	def delete_table(self, table):
+		
+		#
+		items_ref = self._db.child(table).get()
+		if (items_ref.val() == None):
+			return
+		
+		#
+		ids = items_ref.val().keys()
+		
+		#	Delete all existing
+		for key in ids:
+			
+			#
+			self._db.child(table).child(key).remove()
+	
+	
+	#
+	def get_taco_type_by_name(self, name):
+		
+		#
+		taco_type_ref = self._db.child("tacoTypes").order_by_child("name").equal_to(name).get()
+		
+		#
+		try:
+			t = taco_type_ref.val()
+		except IndexError as e:
+			return None
+		
+		return t
+	
+	
+	#
+	def ensure_taco_type_by_name(self, name):
+		
+		#
+		taco_type = self.get_taco_type_by_name(name)
+		if (taco_type == None):
+			
+			#
+			self._db.child("tacoTypes").push({
+				"name" : name
+			})
+		else:
+			pass
+		
+		return self.get_taco_type_by_name(name)
+	
+	#
+	def init_special_celebs(self):
+		
+		#
+		self.ensure_celebrity_by_name("Mike Peralta")
+		self.ensure_celebrity_by_name("Jyoti Nikam")
+		self.ensure_celebrity_by_name("Aditi Patil")
+		self.ensure_celebrity_by_name("Kelly Nguyen")
+		self.ensure_celebrity_by_name("Connon O' Donnell")
+		self.ensure_celebrity_by_name("Barack Obama")
+	
+	#
+	def init_sightings(self):
+		
+		#
+		self.populate_sightings()
+	
+	#
+	def populate_sightings(self):
+		
+		#
+		self.print_table("celebrities", "Celebs before reinitialization")
+		self.print_table("tacoTypes", "Taco types before reinitialization")
+		self.print_table("sightings", "Sightings before reinitialization")
+		
+		#
+		sightings = [
+			{
+				"title" : "What did Guy Fieri Ever to Do You?",
+				"celebrity" : "Guy Fieri",
+				"tacoType" : "Crunchy",
+				"location" : "Las Vegas, Nevada, US",
+				"location_latitude" : 36.1699412,
+				"location_longitude" : -115.1398296,
+				"image" : "guy-fieri.jpg"
+			},
+			{
+				"title" : "He's Got 99 Tacos",
+				"celebrity" : "50 Cent",
+				"tacoType" : "Huge",
+				"location" : "Los Angeles, California, US",
+				"location_latitude" : 34.0522342,
+				"location_longitude" : -118.2436849,
+				"image" : "50-cent.jpg"
+			},
+			{
+				"title" : "I Did Not Inhale the Taco",
+				"celebrity" : "Bill Clinton",
+				"tacoType" : "Soft",
+				"location" : "Little Rock, Arkansas, US",
+				"location_latitude" : 34.7464809,
+				"location_longitude" : -92.28959479999999,
+				"image" : "bill-clinton.jpg"
+			},
+			{
+				"title" : "Eating Like a Charlie's Not-Angel",
+				"celebrity" : "Cameron Diaz",
+				"tacoType" : "Gross",
+				"location" : "San Diego, California, US",
+				"location_latitude" : 32.715738,
+				"location_longitude" : -117.1610838,
+				"image" : "cameron-diaz.jpg"
+			},
+			{
+				"title" : "Machete Don't Text ... While Eating Tacos",
+				"celebrity" : "Danny Trejo",
+				"tacoType" : "Fancy",
+				"location" : "Echo Park, Los Angeles, California",
+				"location_latitude" : 34.0781593,
+				"location_longitude" : -118.2605574,
+				"image" : "danny-trejo.jpg"
+			},
+			{
+				"title" : "Eating Hills of Tacos",
+				"celebrity" : "Heidi Montag",
+				"tacoType" : "Crunchy",
+				"location" : "Crested Butte, Colorado, US",
+				"location_latitude" : 38.8697146,
+				"location_longitude" : -106.9878231,
+				"image" : "heidi-montag.jpg"
+			},
+			{
+				"title" : "Eating Tacos Without Any Friends",
+				"celebrity" : "Jennifer Aniston",
+				"tacoType" : "Huge",
+				"location" : "Sherman Oaks, California, US",
+				"location_latitude" : 34.1489719,
+				"location_longitude" : -118.451357,
+				"image" : "jennifer-aniston.jpg"
+			},
+			{
+				"title" : "I Kissed a Taco",
+				"celebrity" : "Katy Perry",
+				"tacoType" : "Gross",
+				"location" : "Santa Barbara, California, US",
+				"location_latitude" : 34.4208305,
+				"location_longitude" : -119.6981901,
+				"image" : "katy-perry.jpg"
+			},
+			{
+				"title" : "Saved by the Taco",
+				"celebrity" : "Mario Lopez",
+				"tacoType" : "Messy",
+				"location" : "San Diego, California, US",
+				"location_latitude" : 32.715738,
+				"location_longitude" : -117.1610838,
+				"image" : "mario-lopez.jpg"
+			}
+		]
+		
+		#
+		for sighting in sightings:
+			
+			#
+			self.add_sighting(sighting)
+		
+		
+		#
+		self.print_table("celebrities", "Celebs after reinitialization")
+		self.print_table("tacoTypes", "Taco types before reinitialization")
+		self.print_table("sightings", "Sightings after reinitialization")
+	
+	#
+	def get_celebrity_by_name(self, name):
+		
+		#
+		user_ref = self._db.child("celebrities").order_by_child("name").equal_to(name).get()
+		
+		#
+		try:
+			celeb = user_ref.val()
+		except IndexError as e:
+			return None
+		
+		return celeb
+	
+	#
+	def ensure_celebrity_by_name(self, celeb_name):
+		
+		#
+		celeb = self.get_celebrity_by_name(celeb_name)
+		if (celeb == None):
+			
+			#
+			self._db.child("celebrities").push({
+				"name" : celeb_name
+			})
+		else:
+			pass
+		
+		return self.get_celebrity_by_name(celeb_name)
+		
+	
+	#
+	def init_taco_types(self):
+		
+		#
+		self.print_table("tacoTypes", "Taco types before reinitialization")
+		self.delete_table("tacoTypes")
+		#self.populate_taco_types()
+		#self.print_table("tacoTypes", "Taco types after reinitialization")
+	
+	#
+	def populate_taco_types(self):
+		
+		#
+		for t in self._types:
+			self._db.child("tacoTypes").push({
+				"type" : t
+			})
+	
+	#
+	def add_sighting(self, sighting):
+		
+		#	Random date (now to a month ago)
+		stamp = time.time()
+		stamp_randomized = stamp - random.randint(0, 2592000)
+		date = datetime.datetime.fromtimestamp(stamp_randomized)
+		if ( "date" in sighting.keys() ):
+			date = sighting["date"]
+		date = str(date)
+		
+		#	Celebrity
+		celeb = self.ensure_celebrity_by_name(sighting["celebrity"])
+		celeb_id = celeb.keys()[0]
+		
+		#	Taco Type
+		taco_type = self.ensure_taco_type_by_name(sighting["tacoType"])
+		taco_type_id = taco_type.keys()[0]
+		
+		#
+		print "Want to add Celeb = " + str(celeb[celeb_id]) + "; Type = " + taco_type_id
+		
+		#	Title
+		title = ""
+		if ( "title" in sighting.keys() ):
+			title = sighting["title"]
+		if ( title == "" ):
+			title = "Some Random Title"
+		
+		#	Description
+		description = ""
+		if ( "description" in sighting.keys() ):
+			description = sighting["description"]
+		if ( description == "" ):
+			for i in range(random.randint(1, 5)):
+				#( sentences, words, text ) = loremipsum.get_paragraphs(1)
+				text = loremipsum.get_paragraph(True)
+				description = description + text + "\n\n"
+			#description = "Some Random Description yay! \n\nDown a line for the desc. Bro this is cool. And like ... \n\nwhoah ... "
+		
+		#	Location
+		location = ""
+		if ( "location" in sighting.keys() ):
+			location = sighting["location"];
+		if ( location == "" ):
+			location = "California State University Fullerton, Fullerton, California, US"
+		
+		#	Location coords
+		location_latitude = 33.8829226
+		location_longitude = -117.8869261
+		if ( "location_latitude" in sighting.keys() ):
+			location_latitude = sighting["location_latitude"]
+		if ( "location_longitude" in sighting.keys() ):
+			location_longitude = sighting["location_longitude"]
+		
+		#	Image
+		image = ""
+		if ( "image" in sighting.keys() ):
+			image = sighting["image"]
+		if ( image == ""):
+			image = "question-mark-512.jpg"
+		f = open("./pre-populate/taco-images/" + image, "rb")
+		image_data = f.read()
+		f.close()
+		image_data_64 = base64.encodestring(image_data)
+		image_data_url = "data:image/jpeg;base64," + image_data_64
+		
+		#	Add to database
+		sighting_ref = self._db.child("sightings").push({
+			"date" : date,
+			"title" : title,
+			"description" : description,
+			"imageDataUrl" : image_data_url,
+			"celebrities" : {celeb_id : True},
+			"tacoTypes" : { taco_type_id : True},
+			"location" : sighting["location"],
+			"location_latitude" : sighting["location_latitude"],
+			"location_longitude" : sighting["location_longitude"]
+		})
+		
+		#	Add some random comments
+		sighting_id = sighting_ref["name"]
+		for i in range(random.randint(2, 10)):
+			self.add_sighting_random_comment(sighting_id)
+	
+	#
+	def add_sighting_random_comment(self, sighting_id):
+		
+		#	Random date (now to a month ago)
+		stamp = time.time()
+		stamp_randomized = stamp - random.randint(0, 2592000)
+		date = datetime.datetime.fromtimestamp(stamp_randomized)
+		date = str(date)
+		
+		#
+		author = "Comment Bot"
+		author_uid = "0"
+		author_photo_url = "/assets/images/bot-avatar-70.png"
+		
+		#	Generate a random number of paragraphs
+		body = ""
+		for i in range(random.randint(1, 5)):
+			text = loremipsum.get_paragraph(True)
+			body += text + "\n\n"
+		
+		#	Add to database
+		comment_ref = self._db.child("sightingComments").push({
+			"sighting_id" : sighting_id,
+			"date" : date,
+			"author" : author,
+			"author_uid" : author_uid,
+			"author_photo_url" : author_photo_url,
+			"body" : body
+		})
+
+#
+if ( __name__ == "__main__" ):
+	main()
+
+
+

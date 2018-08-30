@@ -1,0 +1,86 @@
+
+{{new-taco-watcher}}
+
+<div data-page-role="view-sighting">
+
+  {{#if model.sighting_notFound}}
+    <div class="container">
+      <div class="jumbotron">
+        <h1>
+          Taco Sighting Not Found :(
+        </h1>
+        <div class="alert alert-danger">
+          Sorry, but that taco alert wasn't found!
+        </div>
+      </div>
+    </div>
+  {{/if}}
+  {{#if (and model model.sighting.id)}}
+    <div data-element-role="full-details">
+
+      <h2>{{model.sighting.title}}</h2>
+
+      <div>
+        {{celebrity-names celebrities=model.sighting.celebrities}}
+        sighted eating a
+        {{taco-types tacoTypes=model.sighting.tacoTypes}}
+        taco at
+        {{model.sighting.location}}
+      </div>
+
+      <div>
+
+        <div data-element-role="sighting-image-map-container">
+          <div data-element-role="sighting-image-container">
+            <a href="#" {{action "showImageOnly"}} ><img data-image-role="sighting-image" src="{{model.sighting.imageDataUrl}}"  /></a>
+          </div>
+          <div data-element-role="sighting-map-container">
+            {{#if true}}
+              {{#if model.sighting.location_longitude}}
+                {{#leaflet-map lat=model.sighting.location_latitude lng=model.sighting.location_longitude zoom=15}}
+
+                  {{tile-layer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png"}}
+
+                  {{#marker-layer location=mapMarkerLocation icon=mapIcons.taco}}
+                    {{#popup-layer}}
+                      <h3>{{celebrity-names celebrities=model.sighting.celebrities}}</h3>
+                      <p>
+                        "{{model.sighting.title}}"
+                      </p>
+                      <p>
+                        {{celebrity-names celebrities=model.sighting.celebrities}}
+                        was spotted eating a
+                        {{taco-types tacoTypes=model.sighting.tacoTypes}}
+                        taco at
+                        {{model.sighting.location}}
+                      </p>
+                    {{/popup-layer}}
+                  {{/marker-layer}}
+
+                {{/leaflet-map}}
+              {{/if}}
+            {{/if}}
+          </div>
+        </div>
+
+        <div data-view-sighting-role="body">
+          {{model.sighting.description}}
+        </div>
+
+      </div>
+
+      {{sighting-comments currentUser=currentUser sighting=model.sighting comments=comments_sorted}}
+
+    </div>
+
+    <div data-element-role="image-only" class="text-center">
+      <p>
+        (click image to close)
+      </p>
+      <p>
+        <a href="#" {{action "showFullDetails"}} ><img data-image-role="sighting-image" src="{{model.sighting.imageDataUrl}}" /></a>
+      </p>
+    </div>
+  {{/if}}
+
+</div>

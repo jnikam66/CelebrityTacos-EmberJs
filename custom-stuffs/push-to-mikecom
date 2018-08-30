@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#
+echo "Begin pushing DIST to mike-com"
+
+#
+#DRY_RUN="--dry-run"
+DRY_RUN=" "
+LOCAL_DIST="dist"
+REMOTE_LOGIN="mikeperalta@mikeperalta.com"
+REMOTE_PUBLIC_HTML="/home/mikeperalta/domains/tacos.mikeperalta.com/public_html"
+
+#	Change to one directory above the dist
+cd ../
+
+#
+rsync \
+	"$DRY_RUN" \
+	--progress --human-readable --verbose --itemize-changes \
+	--archive --delete --delete-excluded \
+	--exclude ".git/" \
+	"$LOCAL_DIST/" "$REMOTE_LOGIN":"$REMOTE_PUBLIC_HTML/"
+
+
+echo "Well ... done pushing"

@@ -1,0 +1,40 @@
+
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      {{#link-to "index"}}<a class="navbar-left"><img data-image-role="navbar-logo" src="/assets/images/taco-small.png" class="img-responsive" /></a>{{/link-to}}
+      {{#link-to "index"}}<a class="navbar-brand">Celebrity Tacos</a>{{/link-to}}
+    </div>
+
+    <ul class="nav navbar-nav">
+
+      <li role="presentation" class="{{if isHomeActive "active"}}">{{#link-to "index"}}Home{{/link-to}}</li>
+
+      <li role="presentation" class="{{if isLatestTacosActive "active"}}">{{#link-to "tacos.latest"}}Latest Tacos{{/link-to}}</li>
+
+      <li role="presentation" class="{{if isMapActive "active"}}">{{#link-to "tacos.map"}}Taco Map{{/link-to}}</li>
+
+      <li role="presentation" class="{{if isNewTacoActive "active"}}">{{#link-to "tacos.new"}}Report a Taco Sighting{{/link-to}}</li>
+
+      <li role="presentation" class="{{if isAboutActive "active"}}">{{#link-to "about"}}About{{/link-to}}</li>
+
+    </ul>
+
+    <ul class="nav navbar-nav navbar-right">
+      {{#if session.isWorking }}
+        <li role="presentation" class=""><a href="#">[Session working ...]</a></li>
+      {{else}}
+        {{#if session.isAuthenticated }}
+          <li role="presentation" class=""><a href="#">Welcome, {{session.currentUser.displayName}}</a></li>
+          <li role="presentation" class=""><button class="btn navbar-btn btn-danger" {{action "signOut"}}>Logout</button></li>
+        {{else}}
+          <li role="presentation" class=""><button class="btn navbar-btn btn-primary" {{action "signIn" "google"}}>Login</button></li>
+        {{/if}}
+      {{/if}}
+    </ul>
+
+  </div>
+</nav>
+
+
+{{yield}}

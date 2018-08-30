@@ -1,0 +1,41 @@
+
+
+{{sighting-comment-form sighting=sighting}}
+
+<h2>All Comments</h2>
+{{#if comments}}
+  <div data-element-role="sighting-comments">
+    {{#each comments as |comment|}}
+      <div data-element-role="sighting-comment" data-comment-id={{comment.id}} class="panel panel-info">
+        <div class="panel-heading">
+          {{comment.author}}
+        </div>
+        <div class="panel-body">
+
+          <div data-element-role="author-photo">
+            <img src="{{comment.author_photo_url}}" />
+          </div>
+
+          <p data-element-role="comment-body">{{comment.body}}</p>
+
+          {{#if (equals comment.author_uid currentUserId)}}
+            <p data-element-role="delete-my-comment-container">
+              <button class="btn btn-danger" {{action "deleteComment" comment.id}}>Delete My Comment</button>
+            </p>
+          {{/if}}
+
+        </div>
+        <div class="panel-footer">
+          {{moment-format comment.date "MMMM Do YYYY, h:mm:ss a"}}
+          ({{moment-from-now comment.date}})
+        </div>
+      </div>
+    {{/each}}
+  </div>
+{{else}}
+  <div class="alert alert-info">
+    No comments were found. Be the first to comment now!
+  </div>
+{{/if}}
+
+{{yield}}
